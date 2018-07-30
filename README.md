@@ -9,3 +9,12 @@ to WebAssembly and hooking into a Webpack build pipeline.
 
 * `./node_modules/.bin/webpack-dev-server` -- Serve the project locally for
   development at `http://localhost:8080`.
+
+
+## Using This Template
+
+```
+mkdir my-project
+cd my-project/
+npm init rust-webpack
+```
