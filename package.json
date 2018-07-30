@@ -1,10 +1,10 @@
 {
   "author": "Nick Fitzgerald <nfitzgerald@mozilla.com>",
   "name": "create-rust-webpack",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": "https://github.com/rustwasm/rust-webpack-template",
   "license": "Apache-2.0/MIT",
-  "scripts": {
+  "bin": {
     "create-rust-webpack": "node -p \"'Rust + WebAssembly + Webpack = <3'\""
   },
   "devDependencies": {
