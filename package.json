@@ -5,7 +5,7 @@
   "repository": "https://github.com/rustwasm/rust-webpack-template",
   "license": "Apache-2.0/MIT",
   "bin": {
-    "create-rust-webpack": "node -p \"'Rust + WebAssembly + Webpack = <3'\""
+    "create-rust-webpack": ".bin/create-rust-webpack.js"
   },
   "devDependencies": {
     "@wasm-tool/rust-loader": "0.0.1",
