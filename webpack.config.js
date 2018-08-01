@@ -9,7 +9,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.rs$/,
+        test: /Cargo.toml$/,
         loader: "@wasm-tool/rust-loader"
       }
     ]
