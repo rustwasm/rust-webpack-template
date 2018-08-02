@@ -4,11 +4,17 @@
   "version": "0.1.3",
   "repository": "https://github.com/rustwasm/rust-webpack-template",
   "license": "Apache-2.0/MIT",
+  "scripts": {
+    "serve": "http-server dist",
+    "watch": "webpack -d --watch",
+    "build": "webpack -d"
+  },
   "bin": {
     "create-rust-webpack": ".bin/create-rust-webpack.js"
   },
   "devDependencies": {
-    "@wasm-tool/rust-loader": "0.0.2",
+    "@wasm-tool/rust-loader": "0.0.3",
+    "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
