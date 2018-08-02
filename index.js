@@ -1,3 +1,3 @@
-import("./src/lib.rs").then(module => {
+import("./Cargo.toml").then(module => {
   module.run();
 });
