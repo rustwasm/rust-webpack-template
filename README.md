@@ -5,20 +5,17 @@
 This template comes pre-configured with all the boilerplate for compiling Rust
 to WebAssembly and hooking into a Webpack build pipeline.
 
-* `npm run build` -- Bundle the project
-
-* `npm run serve` -- Serve the project locally for
+* `npm run start` -- Serve the project locally for
   development at `http://localhost:8080`.
+
+* `npm run build` -- Bundle the project (in production mode)
 
 
 ## Using This Template
 
 ```sh
-npm -g install create-rust-webpack
+mkdir my-app
+cd my-app/
 
-mkdir my-project
-cd my-project
-
-create-rust-webpack
-npm install
+npm init rust-webpack
 ```

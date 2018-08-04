@@ -5,9 +5,8 @@
   "repository": "https://github.com/rustwasm/rust-webpack-template",
   "license": "Apache-2.0/MIT",
   "scripts": {
-    "serve": "http-server dist",
-    "watch": "webpack -d --watch",
-    "build": "webpack -d"
+    "start": "webpack-dev-server -d",
+    "build": "webpack"
   },
   "bin": {
     "create-rust-webpack": ".bin/create-rust-webpack.js"
