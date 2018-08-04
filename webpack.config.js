@@ -21,6 +21,8 @@ module.exports = {
     contentBase: dist,
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    }),
   ]
 };
