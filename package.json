@@ -13,8 +13,14 @@
   },
   "devDependencies": {
     "@wasm-tool/rust-loader": "0.0.2",
+    "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
+  },
+  "dependencies": {
+    "filewatcher-webpack-plugin": "^1.2.0",
+    "watchpack": "^1.6.0",
+    "webpack-watch-files-plugin": "^1.0.2"
   }
 }
