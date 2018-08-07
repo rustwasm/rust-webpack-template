@@ -1,5 +1,5 @@
 dist
 node_modules
-pkg
-target
-wasm-pack.log
+crate/pkg
+crate/target
+crate/wasm-pack.log
