@@ -5,9 +5,9 @@ const fs   = require("fs");
 
 let folderName = '.';
 
-if(process.argv.length >= 3)  {
+if (process.argv.length >= 3) {
   folderName = process.argv[2];   
-  if (!fs.existsSync(folderName)){
+  if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
   }
 }
