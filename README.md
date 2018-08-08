@@ -14,8 +14,5 @@ to WebAssembly and hooking into a Webpack build pipeline.
 ## Using This Template
 
 ```sh
-mkdir my-app
-cd my-app/
-
-npm init rust-webpack
+npm init rust-webpack my-app
 ```
