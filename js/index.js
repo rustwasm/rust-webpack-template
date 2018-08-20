@@ -1,3 +1,3 @@
-import("../crate/Cargo.toml").then(module => {
+import("../crate/pkg").then(module => {
   module.run();
 });
