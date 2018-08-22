@@ -14,5 +14,6 @@ to WebAssembly and hooking into a Webpack build pipeline.
 ## Using This Template
 
 ```sh
+cargo install wasm-pack
 npm init rust-webpack my-app
 ```
