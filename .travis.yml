@@ -10,7 +10,7 @@ INSTALL_NODE_VIA_NVM: &INSTALL_NODE_VIA_NVM
     
 matrix:
   include:
-    # Tests pass on nightly
+    # tests pass on nightly
     - rust: nightly
       env: JOB=test-template
       install:
