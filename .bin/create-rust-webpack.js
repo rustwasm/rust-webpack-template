@@ -20,7 +20,7 @@ clone.on("close", (code) => {
   } else {
     console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
     
-    const install = spawn('npm', ['install'], { cwd: afolderName });
+    const install = spawn('npm', ['install'], { cwd: folderName });
     install.on("close", (code) => {
       if (code !== 0) {
         handleError("install", code);
