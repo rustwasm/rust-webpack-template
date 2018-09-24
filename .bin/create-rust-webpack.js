@@ -16,11 +16,23 @@ const clone = spawn("git", ["clone", "https://github.com/rustwasm/rust-webpack-t
 
 clone.on("close", (code) => {
   if (code !== 0) {
+    handleError("install", code);
+  } else {
+    console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
+    
+    const install = spawn('npm', ['install'], { cwd: folderName });
+    install.on("close", (code) => {
+      if (code !== 0) {
+        handleError("install", code);
+      } else {
+        console.log(" Installed dependencies ✅ ");
+      }
+    });
+  }
+});
+
+function handleError(type, errCode) {
     // TODO(sven): handle error here
     console.error()
     process.exit(code);
-  } else {
-    console.log("🦀Rust + 🕸 WebAssembly + Webpack = ❤️");
-    // TODO(sven): npm install
-  }
-});
+}

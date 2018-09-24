@@ -10,6 +10,7 @@ to WebAssembly and hooking into a Webpack build pipeline.
 
 * `npm run build` -- Bundle the project (in production mode)
 
+_Note: This project assumes that you have installed [`wasm-pack`](https://github.com/rustwasm/wasm-pack). Since it is needed for webpack-plugin to work._
 
 ## Using This Template
 
