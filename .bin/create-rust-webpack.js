@@ -8,7 +8,7 @@ let folderName = '.';
 if (process.argv.length >= 3) {
   folderName = process.argv[2];   
   if (!fs.existsSync(folderName)) {
-    fs.mkdirSync(folderName);    
+    fs.mkdirSync(folderName);
   }
 }
 
