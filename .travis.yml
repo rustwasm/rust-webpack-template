@@ -16,6 +16,7 @@ matrix:
       install:
         - *INSTALL_NODE_VIA_NVM
         - cargo install wasm-pack
+        - cargo install wasm-bindgen
         - npm install
       script: 
         - npm run build
