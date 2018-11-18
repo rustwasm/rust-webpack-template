@@ -34,5 +34,5 @@ clone.on("close", (code) => {
 function handleError(type, errCode) {
     // TODO(sven): handle error here
     console.error()
-    process.exit(code);
+    process.exit(errCode);
 }
