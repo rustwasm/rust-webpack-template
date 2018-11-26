@@ -37,4 +37,4 @@ features = [
 ]
 
 [features]
-default-features = ["console_error_panic_hook", "wee_alloc"]
+default-features = ["console_error_panic_hook"]
