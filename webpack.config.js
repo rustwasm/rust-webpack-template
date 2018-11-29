@@ -5,6 +5,7 @@ const dist = path.resolve(__dirname, "dist");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
+  watch: true,
   entry: "./js/index.js",
   output: {
     path: dist,
