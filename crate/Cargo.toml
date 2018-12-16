@@ -37,4 +37,4 @@ features = [
 ]
 
 [features]
-default-features = ["console_error_panic_hook"]
+default = ["console_error_panic_hook"]
