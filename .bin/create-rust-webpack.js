@@ -1,38 +1,33 @@
 #!/usr/bin/env node
 
-const { spawn } = require("child_process");
-const fs   = require("fs");
+const { spawnSync } = require("child_process");
+const fs = require("fs");
+
+function run(cmd, args, opts) {
+  const output = spawnSync(cmd, args, opts);
+
+  if (output.error != null) {
+    throw output.error;
+  }
+
+  if (output.status !== 0) {
+    throw new Error("Bad error code when running `" + cmd + " " + args.join(" ") + "`: " + output.status);
+  }
+}
 
 let folderName = '.';
 
 if (process.argv.length >= 3) {
-  folderName = process.argv[2];   
+  folderName = process.argv[2];
   if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
   }
 }
 
-const clone = spawn("git", ["clone", "https://github.com/rustwasm/rust-webpack-template.git", folderName]);
+run("git", ["clone", "https://github.com/rustwasm/rust-webpack-template.git", folderName]);
 
-clone.on("close", (code) => {
-  if (code !== 0) {
-    handleError("install", code);
-  } else {
-    console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
-    
-    const install = spawn('npm', ['install'], { cwd: folderName });
-    install.on("close", (code) => {
-      if (code !== 0) {
-        handleError("install", code);
-      } else {
-        console.log(" Installed dependencies ✅ ");
-      }
-    });
-  }
-});
+console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
 
-function handleError(type, errCode) {
-    // TODO(sven): handle error here
-    console.error()
-    process.exit(errCode);
-}
+run("npm", ["install"], { cwd: folderName, shell: true });
+
+console.log(" Installed dependencies ✅ ");
