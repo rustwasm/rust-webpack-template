@@ -3,7 +3,7 @@
   "name": "create-rust-webpack",
   "version": "0.1.5",
   "repository": "https://github.com/rustwasm/rust-webpack-template",
-  "license": "Apache-2.0/MIT",
+  "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "start": "webpack-dev-server -d",
     "build": "webpack"
