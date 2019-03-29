@@ -13,7 +13,6 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-cfg-if = "0.1.5"
 wasm-bindgen = "0.2.25"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
