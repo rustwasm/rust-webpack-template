@@ -24,7 +24,7 @@ if (process.argv.length >= 3) {
   }
 }
 
-run("git", ["clone", "https://github.com/rustwasm/rust-webpack-template.git", folderName]);
+run("git", ["clone", "--no-tags", "--depth", "0", "https://github.com/rustwasm/rust-webpack-template.git", path.join(folderName, "git-clone")]);
 
 console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
 

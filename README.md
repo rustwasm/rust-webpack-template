@@ -45,7 +45,7 @@ npm init rust-webpack my-app
 This template comes pre-configured with all the boilerplate for compiling Rust
 to WebAssembly and hooking into a Webpack build pipeline.
 
-* `npm run start` -- Serve the project locally for development at
-  `http://localhost:8080`.
+* `npm start` -- Serve the project locally for development at
+  `http://localhost:8080`. It auto-reloads when you make any changes.
 
 * `npm run build` -- Bundle the project (in production mode).
