@@ -1,3 +1,4 @@
 node_modules
 /template/package-lock.json
 /template/Cargo.lock
+/template/git-clone

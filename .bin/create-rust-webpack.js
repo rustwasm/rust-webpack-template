@@ -2,6 +2,9 @@
 
 const { spawnSync } = require("child_process");
 const fs = require("fs");
+const path = require("path");
+const cpr = require("cpr");
+const rimraf = require("rimraf");
 
 function run(cmd, args, opts) {
   const output = spawnSync(cmd, args, opts);
@@ -24,10 +27,24 @@ if (process.argv.length >= 3) {
   }
 }
 
-run("git", ["clone", "--no-tags", "--depth", "0", "https://github.com/rustwasm/rust-webpack-template.git", path.join(folderName, "git-clone")]);
+let gitFolder = path.join(folderName, "git-clone");
 
-console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
+// This uses --no-tags and --depth 1 in order to make the cloning faster
+run("git", ["clone", "--no-tags", "--depth", "1", "https://github.com/rustwasm/rust-webpack-template.git", gitFolder]);
 
-run("npm", ["install"], { cwd: folderName, shell: true });
+// Copies the template folder
+cpr(path.join(gitFolder, "template"), folderName, {}, function (err, files) {
+  // Removes the git folder regardless of whether cpr succeeded or not
+  rimraf.sync(gitFolder);
 
-console.log(" Installed dependencies ✅ ");
+  if (err) {
+    throw err;
+
+  } else {
+    console.log(" 🦀 Rust + 🕸 WebAssembly + Webpack = ❤️ ");
+
+    run("npm", ["install"], { cwd: folderName, shell: true });
+
+    console.log(" Installed dependencies ✅ ");
+  }
+});

@@ -6,5 +6,9 @@
   "license": "(MIT OR Apache-2.0)",
   "bin": {
     "create-rust-webpack": ".bin/create-rust-webpack.js"
+  },
+  "dependencies": {
+    "cpr": "^3.0.1",
+    "rimraf": "^2.6.3"
   }
 }
