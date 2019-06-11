@@ -49,3 +49,5 @@ to WebAssembly and hooking into a Webpack build pipeline.
   `http://localhost:8080`. It auto-reloads when you make any changes.
 
 * `npm run build` -- Bundle the project (in production mode).
+
+* `npm test` -- Run the project's unit tests.

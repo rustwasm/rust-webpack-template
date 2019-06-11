@@ -1,4 +1,4 @@
-# You must adjust these to your own details.
+# You must change these to your own details.
 [package]
 name = "rust-webpack-template"
 description = "My super awesome Rust, WebAssembly, and Webpack project!"
