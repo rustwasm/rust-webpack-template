@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "cpr": "^3.0.1",
-    "rimraf": "^2.6.3"
+    "rimraf": "^3.0.0"
   }
 }
