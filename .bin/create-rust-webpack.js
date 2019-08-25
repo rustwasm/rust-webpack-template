@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 
-const { spawnSync } = require("child_process");
+const { execSync, spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const cpr = require("cpr");
 const rimraf = require("rimraf");
+
+function isPresent(dep) {
+  try {
+    execSync(dep, {stdio: 'ignore'});
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 
 function run(cmd, args, opts) {
   const output = spawnSync(cmd, args, opts);
@@ -16,6 +25,11 @@ function run(cmd, args, opts) {
   if (output.status !== 0) {
     throw new Error("Bad error code when running `" + cmd + " " + args.join(" ") + "`: " + output.status);
   }
+}
+
+if (!isPresent("git --version")) {
+  console.log('\n git is required');
+  process.exit(1);
 }
 
 let folderName = '.';
