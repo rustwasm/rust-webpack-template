@@ -6,12 +6,12 @@ const path = require("path");
 const cpr = require("cpr");
 const rimraf = require("rimraf");
 
-function validateInstallation(dep) {
+function isPresent(dep) {
   let installationStatus;
   try {
     execSync(dep, {stdio: 'ignore'});
     installationStatus = true;
-  } catch (err) {
+  } catch (...) {
     installationStatus = false;
   }
   return installationStatus;
@@ -29,8 +29,8 @@ function run(cmd, args, opts) {
   }
 }
 
-if (!validateInstallation("git help -g")) {
-  console.log('\n git is required to be installed!');
+if (!isPresent("git help -g")) {
+  console.log('\n git is required');
   process.exit(1);
 }
 
