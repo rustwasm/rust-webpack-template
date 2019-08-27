@@ -10,11 +10,10 @@ function isPresent(dep) {
   let installationStatus;
   try {
     execSync(dep, {stdio: 'ignore'});
-    installationStatus = true;
+    return true;
   } catch (...) {
-    installationStatus = false;
+    return false;
   }
-  return installationStatus;
 }
 
 function run(cmd, args, opts) {
