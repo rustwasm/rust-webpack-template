@@ -11,7 +11,7 @@ function isPresent(dep) {
   try {
     execSync(dep, {stdio: 'ignore'});
     return true;
-  } catch (...) {
+  } catch (err) {
     return false;
   }
 }
@@ -28,7 +28,7 @@ function run(cmd, args, opts) {
   }
 }
 
-if (!isPresent("git --help")) {
+if (!isPresent("git --version")) {
   console.log('\n git is required');
   process.exit(1);
 }
