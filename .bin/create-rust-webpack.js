@@ -28,7 +28,7 @@ function run(cmd, args, opts) {
   }
 }
 
-if (!isPresent("git help -g")) {
+if (!isPresent("git --help")) {
   console.log('\n git is required');
   process.exit(1);
 }
