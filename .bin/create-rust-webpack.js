@@ -7,7 +7,6 @@ const cpr = require("cpr");
 const rimraf = require("rimraf");
 
 function isPresent(dep) {
-  let installationStatus;
   try {
     execSync(dep, {stdio: 'ignore'});
     return true;
