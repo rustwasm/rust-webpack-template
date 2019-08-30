@@ -32,13 +32,18 @@ if (!isPresent("git --version")) {
   process.exit(1);
 }
 
-let folderName = '.';
+const args = process.argv.slice(2);
 
-if (process.argv.length >= 3) {
-  folderName = process.argv[2];
-  if (!fs.existsSync(folderName)) {
-    fs.mkdirSync(folderName);
-  }
+if (args.some(arg => arg.includes('-'))) {
+  console.log(`Error: unknown option ${args[0]}`);
+  process.exit(1);
+}
+
+let folderName = '.';
+folderName = args[2];
+
+if (!fs.existsSync(folderName)) {
+  fs.mkdirSync(folderName);
 }
 
 let gitFolder = path.join(folderName, "git-clone");
