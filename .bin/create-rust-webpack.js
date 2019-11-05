@@ -32,10 +32,18 @@ if (!isPresent("git --version")) {
   process.exit(1);
 }
 
+const args = process.argv.slice(2);
+
+if (args.some(arg => arg.includes('-'))) {
+  console.log(`Error: unknown option ${args.filter(arg => arg.includes('-'))}`);
+  process.exit(1);
+}
+
 let folderName = '.';
 
-if (process.argv.length >= 3) {
-  folderName = process.argv[2];
+if (args.length >= 1) {
+  folderName = args[0];
+  
   if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
   }
