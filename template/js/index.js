@@ -1,1 +1,5 @@
-import("../pkg/index.js").catch(console.error);
+import("../pkg/index.js")
+  .then((module) => {
+    module.main_js();
+  })
+  .catch(console.error);
