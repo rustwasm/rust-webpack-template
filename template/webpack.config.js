@@ -16,6 +16,9 @@ module.exports = {
   devServer: {
     contentBase: dist,
   },
+  experiments: {
+    asyncWebAssembly: true
+  },
   plugins: [
     new CopyPlugin([
       path.resolve(__dirname, "static")
