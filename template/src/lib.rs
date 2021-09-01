@@ -15,8 +15,8 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
     // This provides better error messages in debug mode.
-    // It's disabled in release mode so it doesn't bloat up the file size.
-    #[cfg(debug_assertions)]
+    // It should be disabled in release mode so it doesn't bloat up the file size.
+    #[cfg(feature = "console_error_panic_hook")]
     console_error_panic_hook::set_once();
 
 
