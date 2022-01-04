@@ -16,6 +16,10 @@ module.exports = {
   devServer: {
     contentBase: dist,
   },
+  watchOptions: {
+    aggregateTimeout: 100,
+    poll: 100,
+  },
   plugins: [
     new CopyPlugin([
       path.resolve(__dirname, "static")
