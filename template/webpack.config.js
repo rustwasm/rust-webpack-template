@@ -7,7 +7,7 @@ const dist = path.resolve(__dirname, "dist");
 module.exports = {
   mode: "development",
   experiments: {
-    futureDefaults: true,
+    asyncWebAssembly: true,
   },
   entry: {
     index: "./js/index.js",
