@@ -25,24 +25,9 @@ pub fn main_js() -> Result<(), JsValue> {
 
 #[wasm_bindgen]
 pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
-    //let window = web_sys::window().expect("no global `window` exists");
     let window = web_sys::window().unwrap();
 
     let document = window.document().expect("should have a document on window");
-
-    // Assuming that the types are now located under a module like web_sys::html_canvas_element and web_sys::canvas_rendering_context_2d
-
-    /*
-    let canvas = document
-        .get_element_by_id(canvas_id)
-        .unwrap()
-        .dyn_into::<web_sys::html_canvas_element::HtmlCanvasElement>()?;
-
-    let context = canvas
-        .get_context("2d")?
-        .unwrap()
-        .dyn_into::<web_sys::canvas_rendering_context_2d::CanvasRenderingContext2d>()?;
-         */
 
     let canvas = document
         .get_element_by_id(canvas_id)
@@ -55,7 +40,7 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
     context.begin_path();
-    context.arc(75.0, 75.0, 50.0, 0.0, 2.0 * std::f64::consts::PI)?;
+    context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
     context.stroke();
 
     Ok(())
