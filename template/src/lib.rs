@@ -1,50 +1,99 @@
 use wasm_bindgen::prelude::*;
 use web_sys::console;
-use web_sys::HtmlCanvasElement;
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
-use motoko::Interruption;
 use motoko::vm_types::CoreSource;
+use motoko::{ast::Id, Interruption, Share, Value};
 
 use std::hash::{Hash, Hasher};
 
 impl Hash for Canvas {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-	panic!("do not hash Canvas values, please");
+    fn hash<H: Hasher>(&self, _state: &mut H) {
+        panic!("do not hash Canvas values, please");
     }
 }
 
-#[macro_use]
-use motoko::{type_mismatch, ast::Inst, value::Value_, vm_types::Store, dynamic::{Result, Dynamic}};
+impl Hash for Context {
+    fn hash<H: Hasher>(&self, _state: &mut H) {
+        panic!("do not hash Context values, please");
+    }
+}
+
+//#[macro_use]
+use motoko::{
+    ast::Inst,
+    dynamic::{Dynamic, Result},
+    type_mismatch,
+    value::Value_,
+    vm_types::Store,
+};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct Canvas {
-    canvas: HtmlCanvasElement
-}
-
-impl Dynamic for Canvas {
-
+    canvas: HtmlCanvasElement,
 }
 
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
-enum CanvasOp {
+enum CanvasMethod {
+    GetContext,
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+struct CanvasMethodValue {
+    canvas: Canvas,
+    method: CanvasMethod,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct Context {
+    context: CanvasRenderingContext2d,
+}
+
+#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+enum ContextMethod {
     FillRect,
     StrokeRect,
     ClearRect,
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
-struct CanvasOpValue {
-    canvas: Canvas,
-    op: CanvasOp,
+struct ContextMethodValue {
+    context: Context,
+    method: ContextMethod,
 }
 
-impl Dynamic for CanvasOpValue {
-
-    fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, _args: Value_) -> Result {
-        type_mismatch!(file!(), line!())
+impl Dynamic for Canvas {
+    // to do -- implement: getContext("2d")
+    fn get_field(&self, _store: &Store, name: &str) -> Result {
+        if name == "getContext" {
+            Ok(CanvasMethodValue {
+                canvas: self.clone(),
+                method: CanvasMethod::GetContext,
+            }
+            .into_value()
+            .into())
+        } else {
+            Err(Interruption::UnboundIdentifer(Id::new(name.to_string())))
+        }
     }
 }
 
+impl Dynamic for CanvasMethodValue {
+    fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, args: Value_) -> Result {
+        match self.method {
+            CanvasMethod::GetContext => match &*args {
+                Value::Text(t) => {
+                    if t.to_string().as_str() == "2d" {
+                        todo!()
+                    } else {
+                        todo!()
+                    }
+                }
+                _ => type_mismatch!(file!(), line!()),
+            },
+        }
+    }
+}
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
@@ -78,6 +127,16 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
         .get_element_by_id(canvas_id)
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
+
+    let canvas = Canvas { canvas: canvas };
+    let v_: Value_ = canvas.into_value().share();
+
+    //
+    // Now we have a Motoko value for a Canvas that
+    // we can implement with the motoko::Dynamic trait.
+    // It will draw on the actual HTML canvas, and be
+    // scriptable with Motoko code running in the VM.
+    //
 
     Ok(())
 }
