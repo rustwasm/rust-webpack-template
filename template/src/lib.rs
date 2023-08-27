@@ -128,8 +128,10 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
 
-    let canvas = Canvas { canvas: canvas };
-    let v_: Value_ = canvas.into_value().share();
+    let canvas2 = Canvas {
+        canvas: canvas.clone(),
+    };
+    let _v: Value_ = canvas2.into_value().share();
 
     //
     // Now we have a Motoko value for a Canvas that
@@ -137,6 +139,17 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     // It will draw on the actual HTML canvas, and be
     // scriptable with Motoko code running in the VM.
     //
+
+    // To do -- do this, but in Motoko, not in Rust:
+
+    let context = canvas
+        .get_context("2d")?
+        .unwrap()
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+
+    context.begin_path();
+    context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
+    context.stroke();
 
     Ok(())
 }
