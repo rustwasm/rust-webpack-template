@@ -1,5 +1,50 @@
 use wasm_bindgen::prelude::*;
 use web_sys::console;
+use web_sys::HtmlCanvasElement;
+
+use motoko::Interruption;
+use motoko::vm_types::CoreSource;
+
+use std::hash::{Hash, Hasher};
+
+impl Hash for Canvas {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+	panic!("do not hash Canvas values, please");
+    }
+}
+
+#[macro_use]
+use motoko::{type_mismatch, ast::Inst, value::Value_, vm_types::Store, dynamic::{Result, Dynamic}};
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct Canvas {
+    canvas: HtmlCanvasElement
+}
+
+impl Dynamic for Canvas {
+
+}
+
+#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+enum CanvasOp {
+    FillRect,
+    StrokeRect,
+    ClearRect,
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+struct CanvasOpValue {
+    canvas: Canvas,
+    op: CanvasOp,
+}
+
+impl Dynamic for CanvasOpValue {
+
+    fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, _args: Value_) -> Result {
+        type_mismatch!(file!(), line!())
+    }
+}
+
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
@@ -33,15 +78,6 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
         .get_element_by_id(canvas_id)
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
-
-    let context = canvas
-        .get_context("2d")?
-        .unwrap()
-        .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
-
-    context.begin_path();
-    context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
-    context.stroke();
 
     Ok(())
 }
