@@ -52,6 +52,9 @@ struct Context {
 
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
 enum ContextMethod {
+    BeginPath,
+    Arc,
+    Stroke,
     FillRect,
     StrokeRect,
     ClearRect,
@@ -103,9 +106,39 @@ impl Dynamic for CanvasMethodValue {
     }
 }
 
-impl Dynamic for Context {}
+impl Dynamic for Context {
+    fn get_field(&self, _store: &Store, name: &str) -> Result {
+        let method = match name {
+            "beginPath" => ContextMethod::BeginPath,
+            "arc" => ContextMethod::Arc,
+            "stroke" => ContextMethod::Stroke,
+            "fillRect" => ContextMethod::FillRect,
+            "strokeRect" => ContextMethod::StrokeRect,
+            "clearRect" => ContextMethod::ClearRect,
+            _ => return Err(Interruption::UnboundIdentifer(Id::new(name.to_string()))),
+        };
+        Ok(ContextMethodValue {
+            context: self.clone(),
+            method,
+        }
+        .into_value()
+        .into())
+    }
+}
 
-impl Dynamic for ContextMethodValue {}
+impl Dynamic for ContextMethodValue {
+    fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, args: Value_) -> Result {
+        match self.method {
+            ContextMethod::BeginPath => match &*args {
+                Value::Unit => {
+                    todo!()
+                }
+                _ => type_mismatch!(file!(), line!()),
+            },
+            _ => todo!(),
+        }
+    }
+}
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
@@ -156,7 +189,7 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     let mut core = Core::empty();
     let _ = core.eval_open_block(
         vec![("canvas", canvas_value)],
-        parse_static!("canvas.getContext(\"2d\")").clone(),
+        parse_static!("let c = canvas.getContext(\"2d\"); c.getContext('2d')").clone(),
     );
 
     // let c = canvas.getContext("2d");
