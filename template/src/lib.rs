@@ -63,7 +63,6 @@ struct ContextMethodValue {
 }
 
 impl Dynamic for Canvas {
-    // to do -- implement: getContext("2d")
     fn get_field(&self, _store: &Store, name: &str) -> Result {
         if name == "getContext" {
             Ok(CanvasMethodValue {
@@ -84,7 +83,15 @@ impl Dynamic for CanvasMethodValue {
             CanvasMethod::GetContext => match &*args {
                 Value::Text(t) => {
                     if t.to_string().as_str() == "2d" {
-                        todo!()
+                        let context = self
+                            .canvas
+                            .canvas
+                            .get_context("2d")
+                            .expect("get context 2d")
+                            .unwrap()
+                            .dyn_into::<web_sys::CanvasRenderingContext2d>()
+                            .unwrap();
+                        Ok(Context { context }.into_value().share())
                     } else {
                         todo!()
                     }
@@ -94,6 +101,10 @@ impl Dynamic for CanvasMethodValue {
         }
     }
 }
+
+impl Dynamic for Context {}
+
+impl Dynamic for ContextMethodValue {}
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
