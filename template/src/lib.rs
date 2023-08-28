@@ -3,7 +3,8 @@ use web_sys::console;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
 use motoko::vm_types::CoreSource;
-use motoko::{ast::Id, Interruption, Share, Value};
+use motoko::{ast::Id, vm_types::Core, Interruption, Share, Value};
+use motoko_proc_macro::parse_static;
 
 use std::hash::{Hash, Hasher};
 
@@ -142,7 +143,7 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     let canvas2 = Canvas {
         canvas: canvas.clone(),
     };
-    let _v: Value_ = canvas2.into_value().share();
+    let canvas_value: Value_ = canvas2.into_value().share();
 
     //
     // Now we have a Motoko value for a Canvas that
@@ -152,6 +153,11 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     //
 
     // To do -- do this, but in Motoko, not in Rust:
+    let mut core = Core::empty();
+    let _ = core.eval_open_block(
+        vec![("canvas", canvas_value)],
+        parse_static!("canvas.getContext(\"2d\")").clone(),
+    );
 
     // let c = canvas.getContext("2d");
     // c.beginPath();
