@@ -153,10 +153,19 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
 
     // To do -- do this, but in Motoko, not in Rust:
 
+    // let c = canvas.getContext("2d");
+    // c.beginPath();
+    // c.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI);
+    // c.stroke();
+    //
+
+    /*
+
     let context = canvas
         .get_context("2d")?
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+     */
 
     context.begin_path();
     context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
