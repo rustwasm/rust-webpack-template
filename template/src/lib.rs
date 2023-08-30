@@ -120,6 +120,9 @@ impl Dynamic for CanvasMethodValue {
 
 impl Dynamic for ContextValue {
     fn get_field(&self, _store: &Store, name: &str) -> Result {
+        console::log_1(&JsValue::from_str(
+            format!("ContextValue::get_field {}", name).as_str(),
+        ));
         let method = match name {
             "beginPath" => ContextMethod::BeginPath,
             "arc" => ContextMethod::Arc,
@@ -140,10 +143,16 @@ impl Dynamic for ContextValue {
 
 impl Dynamic for ContextMethodValue {
     fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, args: Value_) -> Result {
+        console::log_1(&JsValue::from_str(
+            format!("ContextMethodValue::call {:?} {:?}", &self.method, &args).as_str(),
+        ));
         match self.method {
             ContextMethod::BeginPath => {
                 drop(motoko::vm::match_tuple(0, args)?);
                 self.context.context.begin_path();
+                console::log_1(&JsValue::from_str(
+                    format!("ContextMethodValue::call BeginPath () ==> Ok").as_str(),
+                ));
                 Ok(Value::Unit.share())
             }
             ContextMethod::Arc => {
@@ -154,11 +163,17 @@ impl Dynamic for ContextMethodValue {
                 let start = motoko::vm::assert_value_is_f64(&tup[3])?;
                 let end = motoko::vm::assert_value_is_f64(&tup[4])?;
                 self.context.context.arc(x, y, r, start, end).expect("arc");
+                console::log_1(&JsValue::from_str(
+                    format!("ContextMethodValue::call arc (..) ==> Ok").as_str(),
+                ));
                 Ok(Value::Unit.share())
             }
             ContextMethod::Stroke => {
                 drop(motoko::vm::match_tuple(0, args)?);
                 self.context.context.stroke();
+                console::log_1(&JsValue::from_str(
+                    format!("ContextMethodValue::call stroke (..) ==> Ok").as_str(),
+                ));
                 Ok(Value::Unit.share())
             }
             _ => todo!(),
@@ -220,9 +235,9 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     // c.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI);
     // c.stroke();
     //
-    let program = parse_static!("consoleLog(\"hello from Motoko\"); let c = canvas.getContext(\"2d\"); let d = c.getContext('2d'); d.beginPath(); d.arc(137.0, 137.0, 42.666, 0.0, 9.42); d.stroke()").clone();
+    let program = parse_static!("consoleLog(\"hello from Motoko\"); let c = canvas.getContext(\"2d\"); consoleLog(\"hello from Motoko 2\"); consoleLog(\"hello from Motoko 3\"); c.beginPath(); consoleLog(\"hello from Motoko 4\"); c.arc(137.0, 137.0, 42.666, 0.0, 9.42); c.stroke(); consoleLog(\"hello from Motoko 5\"); ").clone();
 
-    let program = parse_static!("consoleLog \"hello from Motoko\"").clone();
+    //let program = parse_static!("consoleLog \"hello from Motoko\"").clone();
 
     let _ = core.eval_open_block(
         vec![
