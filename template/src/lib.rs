@@ -8,13 +8,13 @@ use motoko_proc_macro::parse_static;
 
 use std::hash::{Hash, Hasher};
 
-impl Hash for Canvas {
+impl Hash for CanvasValue {
     fn hash<H: Hasher>(&self, _state: &mut H) {
         panic!("do not hash Canvas values, please");
     }
 }
 
-impl Hash for Context {
+impl Hash for ContextValue {
     fn hash<H: Hasher>(&self, _state: &mut H) {
         panic!("do not hash Context values, please");
     }
@@ -30,7 +30,7 @@ use motoko::{
 };
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-struct Canvas {
+struct CanvasValue {
     canvas: HtmlCanvasElement,
 }
 
@@ -41,12 +41,12 @@ enum CanvasMethod {
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 struct CanvasMethodValue {
-    canvas: Canvas,
+    canvas: CanvasValue,
     method: CanvasMethod,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-struct Context {
+struct ContextValue {
     context: CanvasRenderingContext2d,
 }
 
@@ -62,11 +62,11 @@ enum ContextMethod {
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 struct ContextMethodValue {
-    context: Context,
+    context: ContextValue,
     method: ContextMethod,
 }
 
-impl Dynamic for Canvas {
+impl Dynamic for CanvasValue {
     fn get_field(&self, _store: &Store, name: &str) -> Result {
         if name == "getContext" {
             Ok(CanvasMethodValue {
@@ -95,7 +95,7 @@ impl Dynamic for CanvasMethodValue {
                             .unwrap()
                             .dyn_into::<web_sys::CanvasRenderingContext2d>()
                             .unwrap();
-                        Ok(Context { context }.into_value().share())
+                        Ok(ContextValue { context }.into_value().share())
                     } else {
                         todo!()
                     }
@@ -106,7 +106,7 @@ impl Dynamic for CanvasMethodValue {
     }
 }
 
-impl Dynamic for Context {
+impl Dynamic for ContextValue {
     fn get_field(&self, _store: &Store, name: &str) -> Result {
         let method = match name {
             "beginPath" => ContextMethod::BeginPath,
@@ -129,12 +129,26 @@ impl Dynamic for Context {
 impl Dynamic for ContextMethodValue {
     fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, args: Value_) -> Result {
         match self.method {
-            ContextMethod::BeginPath => match &*args {
-                Value::Unit => {
-                    todo!()
-                }
-                _ => type_mismatch!(file!(), line!()),
-            },
+            ContextMethod::BeginPath => {
+                drop(motoko::vm::match_tuple(0, args)?);
+                self.context.context.begin_path();
+                Ok(Value::Unit.share())
+            }
+            ContextMethod::Arc => {
+                let tup = motoko::vm::match_tuple(5, args)?;
+                let x = motoko::vm::assert_value_is_f64(&tup[0])?;
+                let y = motoko::vm::assert_value_is_f64(&tup[1])?;
+                let r = motoko::vm::assert_value_is_f64(&tup[2])?;
+                let start = motoko::vm::assert_value_is_f64(&tup[3])?;
+                let end = motoko::vm::assert_value_is_f64(&tup[4])?;
+                self.context.context.arc(x, y, r, start, end).expect("arc");
+                Ok(Value::Unit.share())
+            }
+            ContextMethod::Stroke => {
+                drop(motoko::vm::match_tuple(0, args)?);
+                self.context.context.stroke();
+                Ok(Value::Unit.share())
+            }
             _ => todo!(),
         }
     }
@@ -173,13 +187,13 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
 
-    let canvas2 = Canvas {
+    let canvas2 = CanvasValue {
         canvas: canvas.clone(),
     };
     let canvas_value: Value_ = canvas2.into_value().share();
 
     //
-    // Now we have a Motoko value for a Canvas that
+    // Now we have a Motoko value for a CanvasValue that
     // we can implement with the motoko::Dynamic trait.
     // It will draw on the actual HTML canvas, and be
     // scriptable with Motoko code running in the VM.
@@ -187,25 +201,29 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
 
     // To do -- do this, but in Motoko, not in Rust:
     let mut core = Core::empty();
-    let _ = core.eval_open_block(
-        vec![("canvas", canvas_value)],
-        parse_static!("let c = canvas.getContext(\"2d\"); c.getContext('2d')").clone(),
-    );
 
+    // PROGRAM as Motoko:
     // let c = canvas.getContext("2d");
     // c.beginPath();
     // c.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI);
     // c.stroke();
     //
+    let program = parse_static!("let c = canvas.getContext(\"2d\"); let d = c.getContext('2d'); d.beginPath(); d.arc(137.0, 137.0, 42.666, 0.0, 10.0); d.stroke()").clone();
 
-    let context = canvas
-        .get_context("2d")?
-        .unwrap()
-        .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
-
-    context.begin_path();
-    context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
-    context.stroke();
-
+    /*
+        let _ = core.eval_open_block(
+            vec![("canvas", canvas_value)], program);
+    */
+    /*
+        PROGRAM as Rust:
+        --------------------
+        let context = canvas
+            .get_context("2d")?
+            .unwrap()
+            .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+        context.begin_path();
+        context.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI)?;
+        context.stroke();
+    */
     Ok(())
 }
