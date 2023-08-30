@@ -29,6 +29,11 @@ use motoko::{
     vm_types::Store,
 };
 
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+struct ConsoleLogValue {
+    // no dynamic state.
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct CanvasValue {
     canvas: HtmlCanvasElement,
@@ -78,6 +83,13 @@ impl Dynamic for CanvasValue {
         } else {
             Err(Interruption::UnboundIdentifer(Id::new(name.to_string())))
         }
+    }
+}
+impl Dynamic for ConsoleLogValue {
+    fn call(&mut self, _store: &mut Store, _inst: &Option<Inst>, args: Value_) -> Result {
+        let msg = motoko::vm::assert_value_is_string(&args)?;
+        console::log_1(&JsValue::from_str(msg.as_str()));
+        Ok(Value::Unit.share())
     }
 }
 
@@ -208,12 +220,17 @@ pub fn draw_on_canvas(canvas_id: &str) -> Result<(), JsValue> {
     // c.arc(137.0, 137.0, 42.666, 0.0, 3.0 * std::f64::consts::PI);
     // c.stroke();
     //
-    let program = parse_static!("let c = canvas.getContext(\"2d\"); let d = c.getContext('2d'); d.beginPath(); d.arc(137.0, 137.0, 42.666, 0.0, 10.0); d.stroke()").clone();
+    let program = parse_static!("consoleLog(\"hello from Motoko\"); let c = canvas.getContext(\"2d\"); let d = c.getContext('2d'); d.beginPath(); d.arc(137.0, 137.0, 42.666, 0.0, 9.42); d.stroke()").clone();
 
-    /*
-        let _ = core.eval_open_block(
-            vec![("canvas", canvas_value)], program);
-    */
+    let program = parse_static!("consoleLog \"hello from Motoko\"").clone();
+
+    let _ = core.eval_open_block(
+        vec![
+            ("consoleLog", ConsoleLogValue {}.into_value().share()),
+            ("canvas", canvas_value),
+        ],
+        program,
+    );
     /*
         PROGRAM as Rust:
         --------------------
