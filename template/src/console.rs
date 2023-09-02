@@ -1,11 +1,8 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
-use motoko::vm_types::CoreSource;
-use motoko::{ast::Id, vm_types::Core, Interruption, Share, Value, Value_};
-use motoko_proc_macro::parse_static;
+use motoko::{Share, Value, Value_};
 
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
 
 use web_sys::console;
 
@@ -13,7 +10,6 @@ use web_sys::console;
 use motoko::{
     ast::Inst,
     dynamic::{Dynamic, Result},
-    type_mismatch,
     vm_types::Store,
 };
 

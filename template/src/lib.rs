@@ -1,11 +1,6 @@
-use wasm_bindgen::prelude::*;
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
-
-use motoko::vm_types::CoreSource;
-use motoko::{ast::Id, vm_types::Core, Interruption, Share, Value};
+use motoko::{vm_types::Core, Share};
 use motoko_proc_macro::parse_static;
-
-use std::hash::{Hash, Hasher};
+use wasm_bindgen::prelude::*;
 
 mod canvas;
 mod console;
@@ -13,11 +8,8 @@ mod context;
 
 //#[macro_use]
 use motoko::{
-    ast::Inst,
     dynamic::{Dynamic, Result},
-    type_mismatch,
     value::Value_,
-    vm_types::Store,
 };
 
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
