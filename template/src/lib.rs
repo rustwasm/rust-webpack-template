@@ -5,6 +5,7 @@ use wasm_bindgen::prelude::*;
 mod canvas;
 mod console;
 mod context;
+mod movm;
 
 //#[macro_use]
 use motoko::{

@@ -33,6 +33,7 @@ wee_alloc = { version = "0.4.2", optional = true }
 motoko = { path = "../../motoko.rs/crates/motoko" }
 # motoko = "0.0"
 motoko_proc_macro = "0.0"
+lazy_static = "1.4"
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
 # like the DOM.
